@@ -1,0 +1,11 @@
+div {
+   background: white;
+   padding: 20px;
+   width: 300px;
+   margin: auto;
+   border-radius: 10px;
+}
+
+p {
+   font-size: 18px;
+}

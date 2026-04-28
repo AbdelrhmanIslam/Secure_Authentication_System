@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Secure Your Account</h2>
+<p>Scan this QR code with Google Authenticator or Authy to enable 2FA.</p>
+<div class="qr-wrapper">
+    <img src="data:image/png;base64,{{ qr }}" alt="2FA QR Code">
+</div>
+<br>
+<a href="{{ url_for('auth.login') }}" class="btn">Continue to Login</a>
+{% endblock %}

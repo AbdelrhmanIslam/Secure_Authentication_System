@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="gradient-text">Welcome, {{ user.name }}!</h2>
+<hr>
+<div class="dashboard-info">
+    <p><span>Email:</span> {{ user.email }}</p>
+    <p><span>Role:</span> {{ user.role }}</p>
+</div>
+<br>
+<a href="/" class="btn btn-secondary">Logout</a>
+{% endblock %}
