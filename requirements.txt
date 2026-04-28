@@ -1,0 +1,7 @@
+flask
+flask_sqlalchemy
+bcrypt
+pyotp
+qrcode[pil]
+flask_sqlalchemy 
+pymysql 
