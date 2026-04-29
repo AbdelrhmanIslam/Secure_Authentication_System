@@ -1,121 +1,112 @@
-# Secure Authentication System 
+# Secure Authentication System
+
+A comprehensive, modular Flask-based secure authentication system. It demonstrates best practices for user authentication, password security, session management using JSON Web Tokens (JWT), two-factor authentication (2FA), and Role-Based Access Control (RBAC).
+
+---
+
+## Features
+
+### 1. User Registration & Login
+*   Users can register with Name, Email, Password, and Role (`User`, `Manager`, `Admin`).
+*   Secure validation of credentials during the login process.
+*   Data is stored securely in an SQLite database using `Flask-SQLAlchemy`.
+
+### 2. Robust Password Security
+*   Passwords are never stored in plain text.
+*   Cryptographically secure hashing is implemented using `bcrypt` to prevent unauthorized access even if the database is compromised.
+
+### 3. Two-Factor Authentication (2FA)
+*   Integrates `pyotp` for Time-Based One-Time Passwords (TOTP).
+*   Generates a unique secure 2FA secret for each newly registered user.
+*   A QR code is generated using `qrcode` for users to scan with an authenticator app (like Google Authenticator or Authy).
+*   Mandatory 2FA code verification required before granting access to the system.
+
+### 4. JWT Session Management
+*   Employs `PyJWT` for stateless authentication tokens.
+*   After successful 2FA verification, a JWT is minted containing the user's ID, Role, Name, and Email.
+*   Tokens are set to expire securely (e.g., in 1 hour).
+*   **Security First:** The token is sent to the client as an `HttpOnly`, `Lax` cookie. This mitigates Cross-Site Scripting (XSS) and Cross-Site Request Forgery (CSRF) attacks by keeping the token inaccessible to frontend JavaScript and preventing it from being sent on cross-site requests.
+
+### 5. Role-Based Access Control (RBAC)
+*   A custom `@role_required` decorator restricts access to specific routes based on the JWT payload.
+*   Dedicated views for different privilege levels:
+    *   **User Dashboard:** Accessible by any authenticated user.
+    *   **Manager Panel:** Accessible only by `Manager` and `Admin` roles.
+    *   **Admin Panel:** Accessible exclusively by `Admin` roles.
+
+---
 
 ## Project Structure
 
-```
+The project follows a clean, modular Blueprint architecture with separation of concerns:
+
+```text
 secure-auth/
 │
 ├── app/
-│   ├── models/
-│   │   └── user_model.py
-│   │
-│   ├── routes/
-│   │   ├── auth_routes.py
-│   │   └── user_routes.py
-│   │
-│   ├── services/
-│   │   ├── auth_service.py
-│   │   └── twofa_service.py
-│   │
-│   ├── utils/
-│   │   ├── hash_utils.py
-│   │   └── token_utils.py
-│   │
-│   ├── templates/
-│   │   ├── base.html
-│   │   ├── register.html
-│   │   ├── login.html
-│   │   ├── qr.html
-│   │   ├── verify_2fa.html
-│   │   └── dashboard.html
-│   │
-│   ├── static/
-│   │   └── css/
-│   │       ├── base.css
-│   │       ├── register.css
-│   │       ├── login.css
-│   │       ├── qr.css
-│   │       ├── verify.css
-│   │       └── dashboard.css
+│   ├── models/           # Database models (User schema)
+│   ├── routes/           # Application endpoints (Blueprints)
+│   │   ├── auth_routes.py    # Login, Register, 2FA, Logout
+│   │   └── user_routes.py    # Protected Dashboards (User, Manager, Admin)
+│   ├── services/         # Core business logic
+│   │   ├── auth_service.py   # Registration/Login logic
+│   │   └── twofa_service.py  # 2FA code generation & verification
+│   ├── utils/            # Helper functions & decorators
+│   │   ├── hash_utils.py     # Password hashing & checking
+│   │   └── token_utils.py    # JWT minting & @token_required decorator
+│   ├── templates/        # HTML templates for rendering
+│   └── static/           # CSS stylesheets
 │
-├── config.py
-├── run.py
-├── requirements.txt
+├── config.py             # Application configuration (Secret keys, DB URI)
+├── run.py                # Application entry point
+└── requirements.txt      # Python dependencies
 ```
-
----
-
-## Implemented Features
-
-### 1. User Registration
-
-* Users can create an account using:
-
-  * Name
-  * Email
-  * Password
-  * Role
-* User data is stored in the database
-* A unique 2FA secret is generated for each user
-
----
-
-### 2. Password Hashing
-
-* Passwords are not stored as plain text
-* Hashing is implemented using:
-
-  * `generate_password_hash`
-* Verification is done using:
-
-  * `check_password_hash`
-
----
-
-### 3. Login System
-
-* Users log in using:
-
-  * Email
-  * Password
-* Credentials are validated
-* If correct, the system proceeds to 2FA verification
-
----
-
-### 4. Two-Factor Authentication (2FA)
-
-* A secret key is generated for each user
-* A QR code is created and displayed
-* The user scans it using an authenticator app
-* The user enters a 6-digit code
-* The code is verified using `pyotp`
 
 ---
 
 ## Application Flow
 
-1. User registers a new account
-2. Password is hashed and stored
-3. 2FA secret is generated
-4. QR code is displayed
-5. User logs in
-6. Password is verified
-7. User enters 2FA code
-8. Code is verified
-9. Login is successful
-10. Dashboard is displayed
+1.  **Registration:** User creates an account. The password is hashed, a 2FA secret is generated, and a QR code is displayed to the user.
+2.  **Login:** User enters their email and password.
+3.  **Password Verification:** The system verifies the credentials against the hashed password in the database.
+4.  **2FA Prompt:** If credentials are valid, the user is redirected to the 2FA verification screen.
+5.  **2FA Verification:** The user inputs the 6-digit code from their authenticator app.
+6.  **Token Issuance:** Upon successful verification, the backend generates a JWT and sets it as an `HttpOnly` cookie.
+7.  **Access Granted:** The user is redirected to their personalized dashboard, passing through the `@token_required` guard.
+8.  **Role Verification:** If the user attempts to access elevated areas (e.g., Admin panel), the `@role_required` decorator parses the JWT to ensure they have the proper authorization.
+9.  **Logout:** The authentication cookie is cleared.
 
 ---
 
-## Notes
+## Installation & Setup
 
-* The project is modular and organized into:
+### Prerequisites
+*   Python 3.8+
+*   An Authenticator App (Google Authenticator, Authy, etc.)
 
-  * models
-  * routes
-  * services
-  * utils
-* No code duplication
-* Clear separation of concerns
-* Templates and static files are used to separate frontend and backend logic
+### Steps
+
+1.  **Create and Activate a Virtual Environment:**
+    ```bash
+    python -m venv venv
+    
+    # On Windows:
+    venv\Scripts\activate
+    
+    # On macOS/Linux:
+    source venv/bin/activate
+    ```
+
+2.  **Install Dependencies:**
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+3.  **Run the Application:**
+    ```bash
+    python run.py
+    ```
+    *Note: The SQLite database (`instance/secure_auth.db`) will be created automatically upon the first run.*
+
+4.  **Access the App:**
+    *   Open your browser and navigate to `http://127.0.0.1:5000/`.
