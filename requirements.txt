@@ -5,3 +5,4 @@ pyotp
 qrcode[pil]
 flask_sqlalchemy 
 pymysql 
+PyJWT
