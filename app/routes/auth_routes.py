@@ -123,10 +123,10 @@ def verify_2fa_route():
         return "Invalid 2FA Code"
 
     # generate a new JWT containing the user's ID and role
-    token = generate_token(user.id, user.role)
+    token = generate_token(user.id, user.role, user.name, user.email)
     
     # create a redirect response pointing to the user dashboard
-    response = redirect(url_for('user.dashboard'))
+    response = redirect(url_for('user.show_dashboard'))
     
     # attach the token as a secure, HTTP-only cookie to the response
     response.set_cookie(
@@ -138,4 +138,15 @@ def verify_2fa_route():
     )
     
     # return the redirect response so the browser navigates to the dashboard
+    return response
+
+# ---------------- LOGOUT ----------------
+@auth_bp.route('/logout')
+def logout():
+    # redirect to the home page
+    response = redirect(url_for('auth.home'))
+    
+    # clear the auth cookie to end the session
+    response.delete_cookie('auth_token')
+    
     return response
