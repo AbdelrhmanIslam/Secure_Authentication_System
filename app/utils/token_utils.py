@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from functools import wraps
 from flask import request, jsonify, g, current_app
 
-def generate_token(user_id, user_role):
+def generate_token(user_id, user_role, user_name, user_email):
     # purpose: after a user passes both password check and 2FA,
     # we mint a JWT that proves who they are for all future requests
     
@@ -14,6 +14,8 @@ def generate_token(user_id, user_role):
     payload = {
         'user_id': user_id,
         'role': user_role,
+        'name': user_name,
+        'email': user_email,
         'exp': expiry
     }
     

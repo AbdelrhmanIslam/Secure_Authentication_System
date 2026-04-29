@@ -1,5 +1,5 @@
 from app.models.user_model import User, db
-from app.utils.hash_utils import hash_password, verify_password
+from app.utils.hash_utils import hash_password, check_password
 from app.services.twofa_service import generate_2fa_secret
 
 def register_user(name, email, password, role):
@@ -26,7 +26,7 @@ def login_user(email, password):
     if not user:
         return None
 
-    if not verify_password(password, user.password):
+    if not check_password(password, user.password):
         return None
 
     return user
