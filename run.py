@@ -12,6 +12,10 @@ def create_app():
 
     # Register Blueprints
     app.register_blueprint(auth_bp)
+    
+    # import and register the user routes blueprint for all protected app pages
+    from app.routes.user_routes import user_bp
+    app.register_blueprint(user_bp)
 
     return app
 
