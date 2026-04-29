@@ -1,0 +1,44 @@
+.description {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 15px;
+}
+
+.manager-info {
+    text-align: left;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+
+.badge {
+    background: var(--accent-color);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    display: inline-block;
+    margin-left: 5px;
+}
+
+.dummy-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: 0.9rem;
+}
+
+.dummy-table th, .dummy-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.dummy-table th {
+    background: rgba(255, 255, 255, 0.1);
+    font-weight: bold;
+    color: var(--accent-color);
+}

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+<!-- Content block for the manager panel -->
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/manager.css') }}">
+
+<h2 class="gradient-text">Manager Panel</h2>
+<p class="description">This area is restricted to managers and administrators.</p>
+<hr>
+
+<div class="manager-info">
+    <!-- user.role displays the user's role from the JWT to prove RBAC works -->
+    <p>Your Role: <span class="badge">{{ user.role }}</span></p>
+</div>
+<br>
+
+<h3>Team Overview</h3>
+<!-- placeholder data for demo purposes -->
+<table class="dummy-table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Role</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Alice Smith</td>
+            <td>Developer</td>
+            <td>Active</td>
+        </tr>
+        <tr>
+            <td>Bob Jones</td>
+            <td>Designer</td>
+            <td>Active</td>
+        </tr>
+        <tr>
+            <td>Charlie Brown</td>
+            <td>QA</td>
+            <td>On Leave</td>
+        </tr>
+    </tbody>
+</table>
+
+<br>
+<a href="/logout" class="btn btn-secondary">Logout</a>
+{% endblock %}

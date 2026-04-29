@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+<!-- The content block is injected into base.html's container -->
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+
+<h2 class="gradient-text">Your Profile</h2>
+<hr>
+<div class="profile-info">
+    <!-- user.name comes from the JWT payload injected via g.current_user -->
+    <p><span>Name:</span> {{ user.name }}</p>
+    <!-- user.email comes from the JWT payload injected via g.current_user -->
+    <p><span>Email:</span> {{ user.email }}</p>
+    <!-- user.role comes from the JWT payload injected via g.current_user -->
+    <p><span>Role:</span> <span class="badge">{{ user.role }}</span></p>
+</div>
+<br>
+<p class="session-note">Logged in via 2FA-protected session</p>
+<br>
+<a href="/logout" class="btn btn-secondary">Logout</a>
+{% endblock %}

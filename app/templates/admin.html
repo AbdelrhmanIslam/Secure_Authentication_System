@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+<!-- Content block for the admin panel -->
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+
+<div class="admin-warning-banner">
+    ⚠ Admin access only — all actions here are irreversible
+</div>
+
+<h2 class="gradient-text">Admin Panel</h2>
+<p class="description">Full administrative access. Visible to admins only.</p>
+<hr>
+
+<div class="admin-info">
+    <!-- user.role displays the user's role from the JWT to prove RBAC works -->
+    <p>Your Role: <span class="badge">{{ user.role }}</span></p>
+</div>
+<br>
+
+<h3>System Settings</h3>
+<!-- placeholder data for demo purposes -->
+<table class="dummy-table">
+    <thead>
+        <tr>
+            <th>Setting</th>
+            <th>Value</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Maintenance Mode</td>
+            <td>Off</td>
+        </tr>
+        <tr>
+            <td>Max Users</td>
+            <td>1000</td>
+        </tr>
+        <tr>
+            <td>Auto Backup</td>
+            <td>Enabled</td>
+        </tr>
+    </tbody>
+</table>
+
+<br>
+<a href="/logout" class="btn btn-secondary">Logout</a>
+{% endblock %}
