@@ -62,6 +62,7 @@ from flask import Blueprint, render_template, request, redirect, url_for
 from app.services.auth_service import register_user, login_user
 from app.services.twofa_service import generate_qr_code, verify_2fa
 from app.models.user_model import User
+from app.utils.token_utils import generate_token
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -121,4 +122,20 @@ def verify_2fa_route():
     if not verify_2fa(user.twofa_secret, request.form['code']):
         return "Invalid 2FA Code"
 
-    return render_template('dashboard.html', user=user)
+    # generate a new JWT containing the user's ID and role
+    token = generate_token(user.id, user.role)
+    
+    # create a redirect response pointing to the user dashboard
+    response = redirect(url_for('user.dashboard'))
+    
+    # attach the token as a secure, HTTP-only cookie to the response
+    response.set_cookie(
+        'auth_token',        # cookie name — must match what token_required reads
+        token,               # the JWT string from generate_token()
+        httponly=True,       # prevents JavaScript from reading the cookie (XSS protection)
+        samesite='Lax',      # prevents the cookie from being sent on cross-site requests
+        max_age=3600         # cookie lives for 1 hour — matches the token expiry
+    )
+    
+    # return the redirect response so the browser navigates to the dashboard
+    return response
